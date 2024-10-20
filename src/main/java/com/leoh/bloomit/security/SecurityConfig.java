@@ -1,4 +1,4 @@
-package com.leoh.bloomit.security.config;
+package com.leoh.bloomit.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
