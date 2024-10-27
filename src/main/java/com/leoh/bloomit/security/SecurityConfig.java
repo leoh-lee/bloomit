@@ -1,11 +1,11 @@
 package com.leoh.bloomit.security;
 
-import com.leoh.bloomit.security.jwt.JwtUtil;
+import com.leoh.bloomit.security.jwt.JwtAuthenticationFilter;
+import com.leoh.bloomit.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,17 +19,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
@@ -39,13 +33,16 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
 
+        http.headers(header -> header.frameOptions(Customizer.withDefaults()).disable());
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/", "/join").permitAll()
+                .requestMatchers("/", "/auth/sign-in", "/h2-console/**").permitAll()
+                .requestMatchers("/test").hasRole("USER")
                 .anyRequest().authenticated()
         );
 
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
