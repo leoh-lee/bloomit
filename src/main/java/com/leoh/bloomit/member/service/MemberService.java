@@ -1,31 +1,28 @@
 package com.leoh.bloomit.member.service;
 
-import com.leoh.bloomit.member.dto.SignInDto;
-import com.leoh.bloomit.security.jwt.JwtToken;
-import com.leoh.bloomit.security.jwt.JwtTokenProvider;
+import com.leoh.bloomit.member.entity.Member;
+import com.leoh.bloomit.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final MemberRepository memberRepository;
 
-    public JwtToken signIn(SignInDto signInDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInDto.getUsername(), signInDto.getPassword());
-
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.getObject();
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
-        return jwtTokenProvider.generateToken(authentication);
+    public void save(Member member) {
+        if (memberRepository.existsByUsername(member.getUsername())) {
+            throw new IllegalStateException("Username already exists");
+        }
+        memberRepository.save(member);
     }
 
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다."));
+    }
 }
