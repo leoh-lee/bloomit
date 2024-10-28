@@ -35,6 +35,8 @@ public class AuthService {
     }
 
     public void signUp(SignUpDto signUpDto) {
+        String encodedPassword = bCryptPasswordEncoder.encode(signUpDto.getPassword());
+        signUpDto.changePassword(encodedPassword);
         memberService.save(Member.from(signUpDto));
     }
 

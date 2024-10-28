@@ -28,16 +28,17 @@ class AuthServiceTest {
     void signUpSuccess() {
         // given
         String username = "username";
+        String name = "name";
         String password = "password";
         String nickname = "nickname";
-        SignUpDto signUpDto = new SignUpDto(username, password, nickname);
+        SignUpDto signUpDto = new SignUpDto(username, password, name, nickname);
         // when
         authService.signUp(signUpDto);
         // then
         Member findMember = memberService.findByUsername(username);
         assertThat(findMember).isNotNull()
-                .extracting("username", "nickname")
-                .containsExactly(username, nickname);
+                .extracting("username", "nickname", "name")
+                .containsExactly(username, nickname, name);
 
         assertThat(bCryptPasswordEncoder.matches(password, findMember.getPassword())).isTrue();
     }

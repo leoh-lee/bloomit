@@ -27,4 +27,8 @@ public class SignUpDto {
     @NotBlank
     @Size(min = 2, max = 16)
     private String nickname;
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }
