@@ -2,7 +2,7 @@ package com.leoh.bloomit.member.service;
 
 import com.leoh.bloomit.member.entity.Member;
 import com.leoh.bloomit.member.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,10 @@ class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
-    private EntityManager em;
+    @AfterEach
+    void tearDown() {
+        memberRepository.deleteAllInBatch();
+    }
 
     @DisplayName("save 호출 시 username이 동일한 Member가 존재하면 IllegalStateException이 발생한다.")
     @Test
