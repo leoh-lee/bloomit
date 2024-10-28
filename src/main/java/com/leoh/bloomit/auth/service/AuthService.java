@@ -35,13 +35,7 @@ public class AuthService {
     }
 
     public void signUp(SignUpDto signUpDto) {
-        Member newMember = Member.builder()
-                .username(signUpDto.getUsername())
-                .password(bCryptPasswordEncoder.encode(signUpDto.getPassword()))
-                .nickname(signUpDto.getNickname())
-                .build();
-
-        memberService.save(newMember);
+        memberService.save(Member.from(signUpDto));
     }
 
 }

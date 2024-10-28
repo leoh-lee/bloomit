@@ -1,5 +1,6 @@
 package com.leoh.bloomit.member.entity;
 
+import com.leoh.bloomit.auth.dto.SignUpDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,16 +24,27 @@ public class Member implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
-    @NonNull
     private String username;
 
     private String password;
+
+    private String name;
 
     private String nickname;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    public static Member from(SignUpDto signUpDto) {
+        return Member.builder()
+                .name(signUpDto.getName())
+                .username(signUpDto.getUsername())
+                .password(signUpDto.getPassword())
+                .nickname(signUpDto.getNickname())
+                .build();
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
