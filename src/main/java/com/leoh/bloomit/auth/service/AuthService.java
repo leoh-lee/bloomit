@@ -1,4 +1,4 @@
-package com.leoh.bloomit.member.service;
+package com.leoh.bloomit.auth.service;
 
 import com.leoh.bloomit.member.dto.SignInDto;
 import com.leoh.bloomit.security.jwt.JwtToken;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MemberService {
+public class AuthService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
