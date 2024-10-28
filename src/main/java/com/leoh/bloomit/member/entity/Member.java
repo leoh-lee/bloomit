@@ -45,7 +45,6 @@ public class Member implements UserDetails {
                 .build();
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
@@ -72,4 +71,5 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

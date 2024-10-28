@@ -38,4 +38,5 @@ public class AuthController {
     public void signUp(@Valid @RequestBody SignUpDto signUpDto) {
         authService.signUp(signUpDto);
     }
+
 }

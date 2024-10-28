@@ -13,4 +13,5 @@ public class SignInDto {
 
     @NotBlank
     private final String password;
+
 }

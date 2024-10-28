@@ -25,4 +25,5 @@ public class MemberService {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다."));
     }
+
 }
