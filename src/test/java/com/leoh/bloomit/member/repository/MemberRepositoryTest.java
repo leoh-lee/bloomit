@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -17,6 +18,9 @@ class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("username(사용자 ID)에 해당하는 Member가 없으면 Optional.empty()를 반환한다.")
     @Test
@@ -47,5 +51,30 @@ class MemberRepositoryTest {
                 .get()
                 .extracting("username", "nickname")
                 .containsExactly(username, nickname);
+    }
+
+    @DisplayName("existsByUsername 호출 시 username이 동일한 Member가 이미 존재하면 true 반환")
+    @Test
+    void existsByUsernameTrue() {
+        // given
+        String username = "username";
+        Member member = Member.builder().username(username).build();
+        memberRepository.save(member);
+        em.flush();
+        // when
+        boolean result = memberRepository.existsByUsername(username);
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("existsByUsername 호출 시 username이 동일한 Member가 없으면 false 반환")
+    @Test
+    void existsByUsernameFalse() {
+        // given
+        String username = "username";
+        // when
+        boolean result = memberRepository.existsByUsername(username);
+        // then
+        assertThat(result).isFalse();
     }
 }
