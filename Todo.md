@@ -1,0 +1,97 @@
+### 기능
+
+- 필수 기능
+    - [ ]  회원가입, 로그인
+    - [ ]  **책 검색 기능** (장르, 언어 등 여러 필터 검색 포함)
+    - [ ]  리뷰 작성 기능 (평점 포함)
+    - [ ]  게시판, 토론 등
+        - 특정 책 별 게시판
+        - 게시글
+        - 댓글
+    - [ ]  책 추천 게시판
+    - [ ]  내 서재
+        - 리뷰 달면 서재에 추가?
+    - [ ]  독후감 기능 (댓글, 추천 기능)
+    - [ ]  인기 독후감 (조회 수, 추천 수)
+    - [ ]  독후감 왕, 추천 왕 등 랭킹
+- 부가 기능
+    - [ ]  사용자의 검색 알고리즘에 따라 홈화면 출력
+    - [ ]  이 달의 책 등
+    - [ ]  랭커들에게는 배지 수여
+    - [ ]  벚꽃 UI
+
+### 엔티티
+- User(유저)
+    - id
+    - username
+    - password
+    - name
+    - nickname
+    - created_at
+    - updated_at
+- Study(서재) (book과 N:M)
+    - id
+    - user
+    - books
+- BookReport (독후감)
+    - id
+    - study
+    - book
+    - view_count
+    - created_at
+    - updated_at
+- Book(책)
+    - id
+    - title
+    - author
+    - publisher
+    - isbn
+    - image_url
+    - story
+    - description
+    - updated_at
+- Review(리뷰)
+    - id
+    - user
+    - book
+    - rating
+    - content
+    - created_at
+    - updated_at
+- Genre (Book과 N:M) (장르)
+    - id
+    - name
+- Board (게시판)
+    - id
+    - board_type
+    - related_id
+    - created_at
+- BoardType (게시판 타입)
+    - id
+    - name
+    - description
+    - created_at
+- Post (게시글)
+    - id
+    - user
+    - board
+    - title
+    - author(user)
+    - content
+    - view_count
+    - created_at
+    - updated_at
+- Comment (댓글)
+    - id
+    - user
+    - post
+    - content
+    - created_at
+    - updated_at
+- Like (좋아요)
+    - id
+    - user
+    - target_id
+    - target_type(Book, Post, Comment …)
+    - created_at
+  
