@@ -29,9 +29,11 @@ class MemberServiceTest {
     void saveUsernameDuplicatedException() {
         // given
         String username = "username";
-        Member member = Member.builder()
-                .username(username)
-                .build();
+        String nickname = "nickname";
+        String name = "name";
+        String password = "password";
+        Member member = createMember(username, nickname, name, password);
+
         memberRepository.save(member);
         // when
         // then
@@ -46,15 +48,23 @@ class MemberServiceTest {
         // given
         String username = "username";
         String nickname = "nickname";
-        Member member = Member.builder()
-                .username(username)
-                .nickname(nickname)
-                .build();
+        String name = "name";
+        String password = "password";
+        Member member = createMember(username, nickname, name, password);
         // when
         memberService.save(member);
         // then
         Member findMember = memberService.findByUsername(username);
-        assertThat(findMember).extracting("username", "nickname")
-                .containsExactly(username, nickname);
+        assertThat(findMember).extracting("username", "nickname", "name")
+                .containsExactly(username, nickname, name);
+    }
+
+    private Member createMember(String username, String nickname, String name, String password) {
+        return Member.builder()
+                .username(username)
+                .nickname(nickname)
+                .name(name)
+                .password(password)
+                .build();
     }
 }
