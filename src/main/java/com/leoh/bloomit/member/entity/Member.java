@@ -1,6 +1,7 @@
 package com.leoh.bloomit.member.entity;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
+import com.leoh.bloomit.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,19 +18,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
-public class Member implements UserDetails {
+public class Member extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
+    @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String nickname;
 
     @ElementCollection(fetch = FetchType.EAGER)
