@@ -1,8 +1,8 @@
 package com.leoh.bloomit.auth.service;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
-import com.leoh.bloomit.member.entity.Member;
-import com.leoh.bloomit.member.service.MemberService;
+import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

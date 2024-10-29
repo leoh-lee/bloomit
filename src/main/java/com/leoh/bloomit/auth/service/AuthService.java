@@ -2,8 +2,8 @@ package com.leoh.bloomit.auth.service;
 
 import com.leoh.bloomit.auth.dto.SignInDto;
 import com.leoh.bloomit.auth.dto.SignUpDto;
-import com.leoh.bloomit.member.entity.Member;
-import com.leoh.bloomit.member.service.MemberService;
+import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.service.MemberService;
 import com.leoh.bloomit.security.jwt.JwtToken;
 import com.leoh.bloomit.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
