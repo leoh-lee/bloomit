@@ -23,7 +23,7 @@ public class MemberService {
 
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("Username dose not exist"));
     }
 
 }
