@@ -1,17 +1,19 @@
 package com.leoh.bloomit.auth.service;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
-import com.leoh.bloomit.member.entity.Member;
-import com.leoh.bloomit.member.service.MemberService;
+import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@Transactional(readOnly = true)
 class AuthServiceTest {
 
     @Autowired
@@ -25,6 +27,7 @@ class AuthServiceTest {
 
     @DisplayName("회원 가입 성공. 비밀번호는 암호화되어 저장")
     @Test
+    @Transactional
     void signUpSuccess() {
         // given
         String username = "username";

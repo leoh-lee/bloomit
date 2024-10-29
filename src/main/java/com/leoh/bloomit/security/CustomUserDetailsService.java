@@ -1,7 +1,7 @@
 package com.leoh.bloomit.security;
 
-import com.leoh.bloomit.member.entity.Member;
-import com.leoh.bloomit.member.repository.MemberRepository;
+import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

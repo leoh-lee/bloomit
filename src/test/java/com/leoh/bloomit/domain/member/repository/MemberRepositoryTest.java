@@ -1,6 +1,6 @@
-package com.leoh.bloomit.member.repository;
+package com.leoh.bloomit.domain.member.repository;
 
-import com.leoh.bloomit.member.entity.Member;
+import com.leoh.bloomit.domain.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +38,11 @@ class MemberRepositoryTest {
         // given
         String username = "test";
         String nickname = "dog";
-        Member member = Member.builder()
-                .username(username)
-                .nickname(nickname)
-                .build();
+        String name = "name";
+        String password = "password";
+
+        Member member = createMember(username, nickname, name, password);
+
         memberRepository.save(member);
 
         // when
@@ -49,8 +50,8 @@ class MemberRepositoryTest {
         // then
         assertThat(findMember).isPresent()
                 .get()
-                .extracting("username", "nickname")
-                .containsExactly(username, nickname);
+                .extracting("username", "nickname", "name")
+                .containsExactly(username, nickname, name);
     }
 
     @DisplayName("existsByUsername 호출 시 username이 동일한 Member가 이미 존재하면 true 반환")
@@ -58,7 +59,11 @@ class MemberRepositoryTest {
     void existsByUsernameTrue() {
         // given
         String username = "username";
-        Member member = Member.builder().username(username).build();
+        String nickname = "dog";
+        String name = "name";
+        String password = "password";
+
+        Member member = createMember(username, nickname, name, password);
         memberRepository.save(member);
         em.flush();
         // when
@@ -76,5 +81,14 @@ class MemberRepositoryTest {
         boolean result = memberRepository.existsByUsername(username);
         // then
         assertThat(result).isFalse();
+    }
+
+    private Member createMember(String username, String nickname, String name, String password) {
+        return Member.builder()
+                .username(username)
+                .nickname(nickname)
+                .name(name)
+                .password(password)
+                .build();
     }
 }

@@ -1,7 +1,7 @@
 ### 기능
 
 - 필수 기능
-    - [ ]  회원가입, 로그인
+    - [X]  회원가입, 로그인
     - [ ]  **책 검색 기능** (장르, 언어 등 여러 필터 검색 포함)
     - [ ]  리뷰 작성 기능 (평점 포함)
     - [ ]  게시판, 토론 등
@@ -21,7 +21,7 @@
     - [ ]  벚꽃 UI
 
 ### 엔티티
-- User(유저)
+- Member(유저)
     - id
     - username
     - password
@@ -29,7 +29,7 @@
     - nickname
     - created_at
     - updated_at
-- Study(서재) (book과 N:M)
+- Library(서재) (book과 N:M)
     - id
     - user
     - books
@@ -58,9 +58,10 @@
     - content
     - created_at
     - updated_at
-- Genre (Book과 N:M) (장르)
+- Genre (Book과 N:M) (장르) (국내도서, 외국도서)
     - id
     - name
+    - country
 - Board (게시판)
     - id
     - board_type

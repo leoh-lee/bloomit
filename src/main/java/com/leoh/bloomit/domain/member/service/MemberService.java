@@ -1,7 +1,7 @@
-package com.leoh.bloomit.member.service;
+package com.leoh.bloomit.domain.member.service;
 
-import com.leoh.bloomit.member.entity.Member;
-import com.leoh.bloomit.member.repository.MemberRepository;
+import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class MemberService {
 
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("Username dose not exist"));
     }
 
 }
