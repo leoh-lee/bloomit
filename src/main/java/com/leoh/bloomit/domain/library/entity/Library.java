@@ -40,4 +40,12 @@ public class Library {
                 .map(LibraryBook::getBook)
                 .toList();
     }
+
+    public void addBooks(List<Book> books) {
+        List<LibraryBook> newLibraryBooks = books.stream()
+                .map(book -> LibraryBook.create(this, book))
+                .toList();
+
+        libraryBooks.addAll(newLibraryBooks);
+    }
 }
