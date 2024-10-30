@@ -25,4 +25,13 @@ public class LibraryBook extends BaseEntity {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    private LibraryBook(Library library, Book book) {
+        this.library = library;
+        this.book = book;
+    }
+
+    public static LibraryBook create(Library library, Book book) {
+        return new LibraryBook(library, book);
+    }
+
 }
