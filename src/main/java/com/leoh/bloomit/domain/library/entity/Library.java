@@ -1,5 +1,6 @@
 package com.leoh.bloomit.domain.library.entity;
 
+import com.leoh.bloomit.domain.book.entity.Book;
 import com.leoh.bloomit.domain.librarybook.entity.LibraryBook;
 import com.leoh.bloomit.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -26,4 +27,25 @@ public class Library {
     @OneToMany(mappedBy = "library")
     private List<LibraryBook> libraryBooks = new ArrayList<>();
 
+    private Library(Member member) {
+        this.member = member;
+    }
+
+    public static Library create(Member member) {
+        return new Library(member);
+    }
+
+    public List<Book> getBooks() {
+        return libraryBooks.stream()
+                .map(LibraryBook::getBook)
+                .toList();
+    }
+
+    public void addBooks(List<Book> books) {
+        List<LibraryBook> newLibraryBooks = books.stream()
+                .map(book -> LibraryBook.create(this, book))
+                .toList();
+
+        libraryBooks.addAll(newLibraryBooks);
+    }
 }
