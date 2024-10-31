@@ -1,5 +1,6 @@
 package com.leoh.bloomit.domain.review.entity;
 
+import com.leoh.bloomit.common.entity.BaseEntity;
 import com.leoh.bloomit.domain.book.entity.Book;
 import com.leoh.bloomit.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

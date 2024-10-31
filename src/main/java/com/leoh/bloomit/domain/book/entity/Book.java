@@ -1,5 +1,6 @@
 package com.leoh.bloomit.domain.book.entity;
 
+import com.leoh.bloomit.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Book {
+public class Book extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class Book {
     private String publisher;
 
     @Column(nullable = false)
-    private LocalDateTime publicationDate;
+    private LocalDateTime publishedDate;
 
     @Lob
     private String imageUrl;
