@@ -39,38 +39,30 @@ public class BookService {
             throw new IllegalArgumentException("Keyword cannot be null or empty");
         }
 
-        if (bookSearchType == BookSearchType.TITLE) {
-            List<Book> books = bookRepository.findByTitleContaining(keyword);
+        List<Book> findBooks = findBooksByBookSearchType(bookSearchType, keyword);
 
-            return books.stream()
-                    .map(BookResponse::fromEntity)
-                    .toList();
+        if (findBooks.isEmpty()) {
+            return List.of();    
+        }
+
+        return findBooks.stream()
+                .map(BookResponse::fromEntity)
+                .toList();
+    }
+    
+    private List<Book> findBooksByBookSearchType(BookSearchType bookSearchType, String keyword) {
+        if (bookSearchType == BookSearchType.TITLE) {
+            return bookRepository.findByTitleContaining(keyword);
         }
 
         if (bookSearchType == BookSearchType.ISBN) {
-            List<Book> books = bookRepository.findByIsbn(keyword);
-
-            return books.stream()
-                    .map(BookResponse::fromEntity)
-                    .toList();
+            return bookRepository.findByIsbn(keyword);
         }
 
         if (bookSearchType == BookSearchType.AUTHOR) {
-            List<Book> books = bookRepository.findByAuthorContaining(keyword);
-
-            return books.stream()
-                    .map(BookResponse::fromEntity)
-                    .toList();
+            return bookRepository.findByAuthorContaining(keyword);
         }
 
-        if (bookSearchType == BookSearchType.PUBLISHER) {
-            List<Book> books = bookRepository.findByPublisherContaining(keyword);
-
-            return books.stream()
-                    .map(BookResponse::fromEntity)
-                    .toList();
-        }
-
-        return List.of();
+        return bookRepository.findByPublisherContaining(keyword);
     }
 }
