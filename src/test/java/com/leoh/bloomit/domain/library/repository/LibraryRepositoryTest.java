@@ -87,7 +87,7 @@ class LibraryRepositoryTest {
                 .title(bookTitle)
                 .author(author)
                 .publisher("인사이트")
-                .publicationDate(LocalDateTime.now())
+                .publishedDate(LocalDateTime.now())
                 .build();
 
         bookRepository.save(book);

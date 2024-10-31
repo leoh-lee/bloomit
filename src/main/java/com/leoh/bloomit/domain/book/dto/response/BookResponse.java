@@ -30,17 +30,19 @@ public class BookResponse {
     private String description;
 
     public static BookResponse fromEntity(Book book) {
+
         return new BookResponse(
                 book.getId(),
                 book.getIsbn(),
                 book.getTitle(),
                 book.getAuthor(),
                 book.getPublisher(),
-                book.getPublicationDate(),
+                book.getPublishedDate(),
                 book.getImageUrl(),
                 book.getStory(),
                 book.getDescription()
         );
+
     }
 
 }

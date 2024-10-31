@@ -30,7 +30,7 @@ public class Book extends BaseEntity {
     private String publisher;
 
     @Column(nullable = false)
-    private LocalDateTime publicationDate;
+    private LocalDateTime publishedDate;
 
     @Lob
     private String imageUrl;
