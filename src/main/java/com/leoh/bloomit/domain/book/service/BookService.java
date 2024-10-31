@@ -28,29 +28,37 @@ public class BookService {
 
     public List<BookResponse> search(BookSearchRequest bookSearchRequest) {
 
-        BookSearchType bookSearchType = bookSearchRequest.getBookSearchType();
-        String keyword = bookSearchRequest.getKeyword();
+        validateSearchRequest(bookSearchRequest);
 
-        if (ObjectUtils.isEmpty(bookSearchType)) {
+        List<Book> findBooks = findBooksByBookSearchType(bookSearchRequest);
+
+        return convertBooksToBookResponses(findBooks);
+    }
+
+    private void validateSearchRequest(BookSearchRequest bookSearchRequest) {
+        if (ObjectUtils.isEmpty(bookSearchRequest.getBookSearchType())) {
             throw new IllegalArgumentException("BookSearchType cannot be null or empty");
         }
 
-        if (!StringUtils.hasText(keyword)) {
+        if (!StringUtils.hasText(bookSearchRequest.getKeyword())) {
             throw new IllegalArgumentException("Keyword cannot be null or empty");
         }
+    }
 
-        List<Book> findBooks = findBooksByBookSearchType(bookSearchType, keyword);
-
+    private List<BookResponse> convertBooksToBookResponses(List<Book> findBooks) {
         if (findBooks.isEmpty()) {
-            return List.of();    
+            return List.of();
         }
 
         return findBooks.stream()
                 .map(BookResponse::fromEntity)
                 .toList();
     }
-    
-    private List<Book> findBooksByBookSearchType(BookSearchType bookSearchType, String keyword) {
+
+    private List<Book> findBooksByBookSearchType(BookSearchRequest bookSearchRequest) {
+        BookSearchType bookSearchType = bookSearchRequest.getBookSearchType();
+        String keyword = bookSearchRequest.getKeyword();
+
         if (bookSearchType == BookSearchType.TITLE) {
             return bookRepository.findByTitleContaining(keyword);
         }
