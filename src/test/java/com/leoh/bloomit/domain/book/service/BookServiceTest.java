@@ -27,10 +27,7 @@ class BookServiceTest {
     @DisplayName("BookSearchRequest의 bookSearchType이 null이면 IllegalArgumentException 발생")
     void validateBookSearchTypeOfBookSearchRequest() {
         // given
-        BookSearchRequest bookSearchRequest = BookSearchRequest.builder()
-                .bookSearchType(null)
-                .keyword("keyword")
-                .build();
+        BookSearchRequest bookSearchRequest = createBookSearchRequest(null, "keyword");
         // when
         // then
         assertThatThrownBy(() -> bookService.search(bookSearchRequest))
@@ -42,18 +39,9 @@ class BookServiceTest {
     @DisplayName("BookSearchRequest의 keyword가 null이거나 공백이면 IllegalArgumentException 발생")
     void validateKeywordOfBookSearchRequest() {
         // given
-        BookSearchRequest keywordNull = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.TITLE)
-                .keyword(null)
-                .build();
-        BookSearchRequest keywordEmpty = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.TITLE)
-                .keyword("")
-                .build();
-        BookSearchRequest keywordBlank = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.TITLE)
-                .keyword(" ")
-                .build();
+        BookSearchRequest keywordNull = createBookSearchRequest(BookSearchType.TITLE, null);
+        BookSearchRequest keywordEmpty = createBookSearchRequest(BookSearchType.TITLE, "");
+        BookSearchRequest keywordBlank = createBookSearchRequest(BookSearchType.TITLE, " ");
         // when
         // then
         assertThatThrownBy(() -> bookService.search(keywordNull))
@@ -73,10 +61,7 @@ class BookServiceTest {
     @DisplayName("책 조회 시 조회 결과가 없으면 빈 리스트 반환를 반환한다.")
     void searchResultIsEmpty() {
         // given
-        BookSearchRequest request = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.TITLE)
-                .keyword("keyword")
-                .build();
+        BookSearchRequest request = createBookSearchRequest(BookSearchType.TITLE, "keyword");
         // when
         List<BookResponse> result = bookService.search(request);
         // then
@@ -87,38 +72,12 @@ class BookServiceTest {
     @DisplayName("책 이름으로 책 목록을 조회한다.(LIKE)")
     void searchBookByTitle() {
         // given
-        BookSaveRequest request1 = BookSaveRequest.builder()
-                .title("Effective Java")
-                .author("Joshua")
-                .isbn(UUID.randomUUID().toString())
-                .publisher("인사이트")
-                .publishedDate(LocalDateTime.now())
-                .build();
+        createAndSaveRequest("Effective Java", "Joshua", UUID.randomUUID().toString(), "인사이트");
+        createAndSaveRequest("Java TroubleShooting", "이상민", UUID.randomUUID().toString(), "제이펍");
+        createAndSaveRequest("Toby's Spring", "Toby", UUID.randomUUID().toString(), "에이콘");
 
-        BookSaveRequest request2 = BookSaveRequest.builder()
-                .title("Java TroubleShooting")
-                .author("이상민")
-                .isbn(UUID.randomUUID().toString())
-                .publisher("제이펍")
-                .publishedDate(LocalDateTime.now())
-                .build();
+        BookSearchRequest bookSearchRequest = createBookSearchRequest(BookSearchType.TITLE, "Java");
 
-        BookSaveRequest request3 = BookSaveRequest.builder()
-                .title("Toby's Spring")
-                .author("Toby")
-                .isbn(UUID.randomUUID().toString())
-                .publisher("에이콘")
-                .publishedDate(LocalDateTime.now())
-                .build();
-
-        bookService.save(request1);
-        bookService.save(request2);
-        bookService.save(request3);
-
-        BookSearchRequest bookSearchRequest = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.TITLE)
-                .keyword("Java")
-                .build();
         // when
         List<BookResponse> bookResponses = bookService.search(bookSearchRequest);
 
@@ -136,42 +95,15 @@ class BookServiceTest {
     @DisplayName("작가 명으로 책 목록을 조회한다.(LIKE)")
     void searchBookByAuthor() {
         // given
-        String author = "Joshua lee";
-        String author2 = "Kim Joshua";
+        String targetAuthor1 = "Joshua lee";
+        String targetAuthor2 = "Kim Joshua";
         String wrongAuthor = "author";
 
-        BookSaveRequest request = BookSaveRequest.builder()
-                .title("Effective Java")
-                .author(author)
-                .isbn(UUID.randomUUID().toString())
-                .publisher("인사이트")
-                .publishedDate(LocalDateTime.now())
-                .build();
+        createAndSaveRequest("Effective Java", targetAuthor1, "인사이트");
+        createAndSaveRequest("Effective Java", targetAuthor2, "인사이트");
+        createAndSaveRequest("Effective Java", wrongAuthor, "인사이트");
 
-        BookSaveRequest request2 = BookSaveRequest.builder()
-                .title("Effective Java")
-                .author(author2)
-                .isbn(UUID.randomUUID().toString())
-                .publisher("인사이트")
-                .publishedDate(LocalDateTime.now())
-                .build();
-
-        BookSaveRequest request3 = BookSaveRequest.builder()
-                .title("Effective Java")
-                .author(wrongAuthor)
-                .isbn(UUID.randomUUID().toString())
-                .publisher("인사이트")
-                .publishedDate(LocalDateTime.now())
-                .build();
-
-        bookService.save(request);
-        bookService.save(request2);
-        bookService.save(request3);
-
-        BookSearchRequest bookSearchRequest = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.AUTHOR)
-                .keyword("Joshua")
-                .build();
+        BookSearchRequest bookSearchRequest =  createBookSearchRequest(BookSearchType.AUTHOR, "Joshua");
 
         // when
         List<BookResponse> bookResponses = bookService.search(bookSearchRequest);
@@ -180,7 +112,7 @@ class BookServiceTest {
         assertThat(bookResponses).hasSize(2);
         assertThat(bookResponses)
                 .extracting(BookResponse::getAuthor)
-                .containsExactlyInAnyOrder("Joshua lee", "Kim Joshua");
+                .containsExactlyInAnyOrder(targetAuthor1, targetAuthor2);
     }
 
     @Test
@@ -189,20 +121,9 @@ class BookServiceTest {
         // given
         String isbn = UUID.randomUUID().toString();
 
-        BookSaveRequest request = BookSaveRequest.builder()
-                .title("Effective Java")
-                .author("Joshua")
-                .isbn(isbn)
-                .publisher("인사이트")
-                .publishedDate(LocalDateTime.now())
-                .build();
+        createAndSaveRequest("Effective Java", "Joshua", isbn, "인사이트");
 
-        bookService.save(request);
-
-        BookSearchRequest bookSearchRequest = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.ISBN)
-                .keyword(isbn)
-                .build();
+        BookSearchRequest bookSearchRequest = createBookSearchRequest(BookSearchType.ISBN, isbn);
 
         // when
         List<BookResponse> bookResponses = bookService.search(bookSearchRequest);
@@ -210,9 +131,9 @@ class BookServiceTest {
         // then
         assertThat(bookResponses).hasSize(1);
         assertThat(bookResponses)
-                .extracting(BookResponse::getTitle, BookResponse::getAuthor)
+                .extracting(BookResponse::getTitle, BookResponse::getAuthor, BookResponse::getIsbn)
                 .containsExactlyInAnyOrder(
-                        tuple("Effective Java", "Joshua")
+                        tuple("Effective Java", "Joshua", isbn)
                 );
     }
 
@@ -222,38 +143,11 @@ class BookServiceTest {
         // given
         String targetPublisher = "인사이트";
 
-        BookSaveRequest request = BookSaveRequest.builder()
-                .title("request1")
-                .author("Joshua")
-                .isbn(UUID.randomUUID().toString())
-                .publisher("인사이트 아웃")
-                .publishedDate(LocalDateTime.now())
-                .build();
+        createAndSaveRequest("request1", "Joshua", "인사이트 아웃");
+        createAndSaveRequest("request2", "Joshua", "wrongPublisher");
+        createAndSaveRequest("request3", "Joshua", "인사이트 인");
 
-        BookSaveRequest request2 = BookSaveRequest.builder()
-                .title("request2")
-                .author("Joshua")
-                .isbn(UUID.randomUUID().toString())
-                .publisher("wrongPublisher")
-                .publishedDate(LocalDateTime.now())
-                .build();
-
-        BookSaveRequest request3 = BookSaveRequest.builder()
-                .title("request3")
-                .author("Joshua")
-                .isbn(UUID.randomUUID().toString())
-                .publisher("인사이트 인")
-                .publishedDate(LocalDateTime.now())
-                .build();
-
-        bookService.save(request);
-        bookService.save(request2);
-        bookService.save(request3);
-
-        BookSearchRequest bookSearchRequest = BookSearchRequest.builder()
-                .bookSearchType(BookSearchType.PUBLISHER)
-                .keyword(targetPublisher)
-                .build();
+        BookSearchRequest bookSearchRequest = createBookSearchRequest(BookSearchType.PUBLISHER, targetPublisher);
 
         // when
         List<BookResponse> bookResponses = bookService.search(bookSearchRequest);
@@ -266,6 +160,37 @@ class BookServiceTest {
                         tuple("request1", "인사이트 아웃"),
                         tuple("request3", "인사이트 인")
                 );
+    }
+
+    private BookSearchRequest createBookSearchRequest(BookSearchType bookSearchType, String keyword) {
+        return BookSearchRequest.builder()
+                .bookSearchType(bookSearchType)
+                .keyword(keyword)
+                .build();
+    }
+
+    private void createAndSaveRequest(String title, String author, String isbn, String publisher) {
+        BookSaveRequest request = BookSaveRequest.builder()
+                .title(title)
+                .author(author)
+                .isbn(isbn)
+                .publisher(publisher)
+                .publishedDate(LocalDateTime.now())
+                .build();
+
+        bookService.save(request);
+    }
+
+    private void createAndSaveRequest(String title, String author, String publisher) {
+        BookSaveRequest request = BookSaveRequest.builder()
+                .title(title)
+                .author(author)
+                .isbn(UUID.randomUUID().toString())
+                .publisher(publisher)
+                .publishedDate(LocalDateTime.now())
+                .build();
+
+        bookService.save(request);
     }
 
 }
