@@ -1,5 +1,6 @@
 package com.leoh.bloomit.domain.like.entity;
 
+import com.leoh.bloomit.common.entity.BaseEntity;
 import com.leoh.bloomit.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class Like extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

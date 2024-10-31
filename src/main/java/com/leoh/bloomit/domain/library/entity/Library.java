@@ -1,5 +1,6 @@
 package com.leoh.bloomit.domain.library.entity;
 
+import com.leoh.bloomit.common.entity.BaseEntity;
 import com.leoh.bloomit.domain.book.entity.Book;
 import com.leoh.bloomit.domain.librarybook.entity.LibraryBook;
 import com.leoh.bloomit.domain.member.entity.Member;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Library {
+public class Library extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
