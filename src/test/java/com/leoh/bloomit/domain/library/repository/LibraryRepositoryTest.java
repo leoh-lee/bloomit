@@ -39,13 +39,13 @@ class LibraryRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
-    @DisplayName("특정 회원의 서재를 조회한다2.")
+    @DisplayName("특정 회원의 서재를 조회한다.")
     void findByMember() {
         //given
         Member member = createMember("username", "nickname", "name", "password");
+        Library library = member.createLibrary();
+
         memberRepository.save(member);
-        Library library = Library.create(member);
-        libraryRepository.save(library);
 
         String bookTitle1 = "effective java";
         String bookTitle2 = "함께자라기";

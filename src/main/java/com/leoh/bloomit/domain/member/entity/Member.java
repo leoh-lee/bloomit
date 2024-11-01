@@ -2,6 +2,7 @@ package com.leoh.bloomit.domain.member.entity;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
 import com.leoh.bloomit.common.entity.BaseEntity;
+import com.leoh.bloomit.domain.library.entity.Library;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,6 +42,10 @@ public class Member extends BaseEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "library_id")
+    private Library library;
+
     public static Member from(SignUpDto signUpDto) {
         return Member.builder()
                 .name(signUpDto.getName())
@@ -55,6 +60,12 @@ public class Member extends BaseEntity implements UserDetails {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList();
+    }
+
+    public Library createLibrary() {
+        Library createdLibrary = Library.create(this);
+        this.library = createdLibrary;
+        return createdLibrary;
     }
 
     @Override

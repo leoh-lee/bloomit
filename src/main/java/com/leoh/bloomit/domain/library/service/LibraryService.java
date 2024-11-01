@@ -33,7 +33,4 @@ public class LibraryService {
         return LibrarySearchResponse.create(memberResponse, bookResponses);
     }
 
-    public void save(Library library) {
-        libraryRepository.save(library);
-    }
 }
