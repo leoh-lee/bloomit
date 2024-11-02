@@ -43,7 +43,7 @@ class LibraryRepositoryTest {
     void findByMember() {
         //given
         Member member = createMember("username", "nickname", "name", "password");
-        Library library = member.createLibrary();
+        Library library = member.createAndSetLibrary();
 
         memberRepository.save(member);
 

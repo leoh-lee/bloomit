@@ -20,7 +20,7 @@ public class MemberService {
             throw new IllegalStateException("Username already exists");
         }
 
-        member.createLibrary();
+        member.createAndSetLibrary();
         memberRepository.save(member);
     }
 

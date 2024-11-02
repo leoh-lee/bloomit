@@ -3,7 +3,7 @@ package com.leoh.bloomit.domain.book.service;
 import com.leoh.bloomit.domain.book.dto.request.BookSaveRequest;
 import com.leoh.bloomit.domain.book.dto.request.BookSearchRequest;
 import com.leoh.bloomit.domain.book.dto.response.BookResponse;
-import com.leoh.bloomit.domain.book.entity.Book;
+import com.leoh.bloomit.domain.book.entity.collection.Books;
 import com.leoh.bloomit.domain.book.enums.BookSearchType;
 import com.leoh.bloomit.domain.book.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +27,11 @@ public class BookService {
     }
 
     public List<BookResponse> search(BookSearchRequest bookSearchRequest) {
-
         validateSearchRequest(bookSearchRequest);
 
-        List<Book> findBooks = findBooksByBookSearchType(bookSearchRequest);
+        Books findBooks = findBooksByBookSearchType(bookSearchRequest);
 
-        return convertBooksToBookResponses(findBooks);
+        return findBooks.toBookResponse();
     }
 
     private void validateSearchRequest(BookSearchRequest bookSearchRequest) {
@@ -45,32 +44,22 @@ public class BookService {
         }
     }
 
-    private List<BookResponse> convertBooksToBookResponses(List<Book> findBooks) {
-        if (findBooks.isEmpty()) {
-            return List.of();
-        }
-
-        return findBooks.stream()
-                .map(BookResponse::fromEntity)
-                .toList();
-    }
-
-    private List<Book> findBooksByBookSearchType(BookSearchRequest bookSearchRequest) {
+    private Books findBooksByBookSearchType(BookSearchRequest bookSearchRequest) {
         BookSearchType bookSearchType = bookSearchRequest.getBookSearchType();
         String keyword = bookSearchRequest.getKeyword();
 
         if (bookSearchType == BookSearchType.TITLE) {
-            return bookRepository.findByTitleContaining(keyword);
+            return Books.of(bookRepository.findByTitleContaining(keyword));
         }
 
         if (bookSearchType == BookSearchType.ISBN) {
-            return bookRepository.findByIsbn(keyword);
+            return Books.of(bookRepository.findByIsbn(keyword));
         }
 
         if (bookSearchType == BookSearchType.AUTHOR) {
-            return bookRepository.findByAuthorContaining(keyword);
+            return Books.of(bookRepository.findByAuthorContaining(keyword));
         }
 
-        return bookRepository.findByPublisherContaining(keyword);
+        return Books.of(bookRepository.findByPublisherContaining(keyword));
     }
 }

@@ -51,7 +51,8 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public Library createLibrary() {
+    // Member 에서 Library를 생성하는 게 과연 객체지향 적인가?
+    public Library createAndSetLibrary() {
         Library createdLibrary = Library.create(this);
         this.library = createdLibrary;
         return createdLibrary;
