@@ -1,5 +1,7 @@
 package com.leoh.bloomit.domain.member.service;
 
+import com.leoh.bloomit.common.exception.ErrorCode;
+import com.leoh.bloomit.common.exception.ResourceNotFoundException;
 import com.leoh.bloomit.domain.library.dto.response.LibrarySearchResponse;
 import com.leoh.bloomit.domain.library.service.LibraryService;
 import com.leoh.bloomit.domain.member.dto.response.MemberResponse;
@@ -64,6 +66,35 @@ class MemberServiceTest {
                         .returns("nickname", MemberResponse::getNickname)
                         .returns("name", MemberResponse::getName);
 
+    }
+
+    @Test
+    @DisplayName("유저명으로 회원 조회 시, 해당 회원이 없으면 ResourceNotFoundException 발생")
+    void findByUsernameNotFoundException() {
+        // given
+        // when
+        // then
+        assertThatThrownBy(() -> memberService.findByUsername("username"))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage(ErrorCode.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("유저명으로 회원 조회")
+    void findByUsername() {
+        // given
+        String username = "username";
+        String nickname = "nickname";
+        String name = "name";
+        String password = "password";
+        Member member = Member.create(username, password, name, nickname);
+        memberService.save(member);
+        // when
+        Member findMember = memberService.findByUsername(username);
+        // then
+        assertThat(findMember)
+                .extracting("username", "nickname", "name")
+                .containsExactly(username, nickname, name);
     }
 
 }
