@@ -6,6 +6,7 @@ import com.leoh.bloomit.domain.library.dto.response.LibrarySearchResponse;
 import com.leoh.bloomit.domain.library.service.LibraryService;
 import com.leoh.bloomit.domain.member.dto.response.MemberResponse;
 import com.leoh.bloomit.domain.member.entity.Member;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +25,22 @@ class MemberServiceTest {
     @Autowired
     private LibraryService libraryService;
 
+    private Member member;
+    private static final String USERNAME = "username";
+    private static final String NICKNAME = "nickname";
+    private static final String NAME = "name";
+    private static final String PASSWORD = "password";
+
+    @BeforeEach
+    void setUp() {
+        member = Member.create(USERNAME, PASSWORD, NAME, NICKNAME);
+    }
+
     @DisplayName("save 호출 시 username이 동일한 Member가 존재하면 IllegalStateException이 발생한다.")
     @Test
     void saveUsernameDuplicatedException() {
         // given
-        String username = "username";
-        String nickname = "nickname";
-        String name = "name";
-        String password = "password";
-        Member member = Member.create(username, password, name, nickname);
-        Member member2 = Member.create(username, "password2", "name2", "nickname2");
+        Member member2 = Member.create(USERNAME, "password2", "name2", "nickname2");
         memberService.save(member);
         // when
         // then
@@ -46,25 +53,19 @@ class MemberServiceTest {
     @Test
     void saveSuccess() {
         // given
-        String username = "username";
-        String nickname = "nickname";
-        String name = "name";
-        String password = "password";
-        Member member = Member.create(username, password, name, nickname);
-
         // when
         memberService.save(member);
-        MemberResponse findMember = memberService.findByUsername(username);
+        MemberResponse findMember = memberService.findByUsername(USERNAME);
         LibrarySearchResponse librarySearchResponse = libraryService.findByMemberId(findMember.getId());
         // then
         assertThat(findMember).extracting("username", "nickname", "name")
-                .containsExactly(username, nickname, name);
+                .containsExactly(USERNAME, NICKNAME, NAME);
 
         assertThat(librarySearchResponse).isNotNull()
                         .extracting(LibrarySearchResponse::getMember)
-                        .returns("username", MemberResponse::getUsername)
-                        .returns("nickname", MemberResponse::getNickname)
-                        .returns("name", MemberResponse::getName);
+                        .returns(USERNAME, MemberResponse::getUsername)
+                        .returns(NICKNAME, MemberResponse::getNickname)
+                        .returns(NAME, MemberResponse::getName);
 
     }
 
@@ -74,7 +75,7 @@ class MemberServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> memberService.findByUsername("username"))
+        assertThatThrownBy(() -> memberService.findByUsername(USERNAME))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage(ErrorCode.MEMBER_NOT_FOUND.getMessage());
     }
@@ -83,18 +84,13 @@ class MemberServiceTest {
     @DisplayName("유저명으로 회원 조회")
     void findByUsername() {
         // given
-        String username = "username";
-        String nickname = "nickname";
-        String name = "name";
-        String password = "password";
-        Member member = Member.create(username, password, name, nickname);
         memberService.save(member);
         // when
-        MemberResponse findMember = memberService.findByUsername(username);
+        MemberResponse findMember = memberService.findByUsername(USERNAME);
         // then
         assertThat(findMember)
                 .extracting("username", "nickname", "name")
-                .containsExactly(username, nickname, name);
+                .containsExactly(USERNAME, NICKNAME, NAME);
     }
 
 }
