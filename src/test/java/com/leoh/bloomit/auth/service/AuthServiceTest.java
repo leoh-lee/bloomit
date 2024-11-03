@@ -1,7 +1,7 @@
 package com.leoh.bloomit.auth.service;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
-import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.dto.response.MemberResponse;
 import com.leoh.bloomit.domain.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,12 +38,10 @@ class AuthServiceTest {
         // when
         authService.signUp(signUpDto);
         // then
-        Member findMember = memberService.findByUsername(username);
+        MemberResponse findMember = memberService.findByUsername(username);
         assertThat(findMember).isNotNull()
                 .extracting("username", "nickname", "name")
                 .containsExactly(username, nickname, name);
-
-        assertThat(bCryptPasswordEncoder.matches(password, findMember.getPassword())).isTrue();
     }
 
 }

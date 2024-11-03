@@ -54,7 +54,7 @@ class MemberServiceTest {
 
         // when
         memberService.save(member);
-        Member findMember = memberService.findByUsername(username);
+        MemberResponse findMember = memberService.findByUsername(username);
         LibrarySearchResponse librarySearchResponse = libraryService.findByMemberId(findMember.getId());
         // then
         assertThat(findMember).extracting("username", "nickname", "name")
@@ -90,7 +90,7 @@ class MemberServiceTest {
         Member member = Member.create(username, password, name, nickname);
         memberService.save(member);
         // when
-        Member findMember = memberService.findByUsername(username);
+        MemberResponse findMember = memberService.findByUsername(username);
         // then
         assertThat(findMember)
                 .extracting("username", "nickname", "name")

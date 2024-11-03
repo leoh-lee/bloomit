@@ -1,6 +1,7 @@
 package com.leoh.bloomit.domain.member.service;
 
 import com.leoh.bloomit.common.exception.ResourceNotFoundException;
+import com.leoh.bloomit.domain.member.dto.response.MemberResponse;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Member findByUsername(String username) {
+    public MemberResponse findByUsername(String username) {
         return memberRepository.findByUsername(username)
+                .map(MemberResponse::fromEntity)
                 .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
     }
 
