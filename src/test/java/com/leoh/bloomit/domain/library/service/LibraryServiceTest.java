@@ -32,7 +32,7 @@ class LibraryServiceTest {
     @DisplayName("특정 회원의 서재를 조회한다.")
     void findByMember() {
         //given
-        Member member = createMember("username", "nickname", "name", "password");
+        Member member = Member.create("username", "password", "name", "nickname");
         Library library = Library.create(member);
 
         String bookTitle1 = "effective java";
@@ -64,12 +64,4 @@ class LibraryServiceTest {
                 );
     }
 
-    private Member createMember(String username, String nickname, String name, String password) {
-        return Member.builder()
-                .username(username)
-                .nickname(nickname)
-                .name(name)
-                .password(password)
-                .build();
-    }
 }

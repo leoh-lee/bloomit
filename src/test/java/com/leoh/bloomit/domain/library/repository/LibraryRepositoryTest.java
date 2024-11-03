@@ -42,11 +42,11 @@ class LibraryRepositoryTest {
     @DisplayName("특정 회원의 서재를 조회한다.")
     void findByMember() {
         //given
-        Member member = createMember("username", "nickname", "name", "password");
-        Library library = member.createAndSetLibrary();
+        Member member = Member.create("username", "password]", "name", "nickname");
 
         memberRepository.save(member);
-
+        em.flush();
+        em.clear();
         String bookTitle1 = "effective java";
         String bookTitle2 = "함께자라기";
         String bookTitle3 = "실용주의 프로그래머";
@@ -57,6 +57,8 @@ class LibraryRepositoryTest {
         Book effectiveJava = createBookAndSave(bookTitle1, author1);
         Book growthTogether = createBookAndSave(bookTitle2, author2);
         Book programmer = createBookAndSave(bookTitle3, author3);
+
+        Library library = libraryRepository.findByMemberId(member.getId());
 
         library.addBooks(List.of(
                 effectiveJava, growthTogether, programmer
@@ -93,15 +95,6 @@ class LibraryRepositoryTest {
         bookRepository.save(book);
 
         return book;
-    }
-
-    private Member createMember(String username, String nickname, String name, String password) {
-        return Member.builder()
-                .username(username)
-                .nickname(nickname)
-                .name(name)
-                .password(password)
-                .build();
     }
 
 }

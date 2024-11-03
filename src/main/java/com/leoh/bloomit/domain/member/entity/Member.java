@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
 @Getter
-@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
 public class Member extends BaseEntity {
@@ -42,20 +42,28 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "library_id")
     private Library library;
 
+    public static Member create(String username, String password, String name, String nickname) {
+        Member member = Member.builder()
+                .name(name)
+                .username(username)
+                .password(password)
+                .nickname(nickname)
+                .build();
+        member.library = Library.create(member);
+
+        return member;
+    }
+
     public static Member from(SignUpDto signUpDto) {
-        return Member.builder()
+        Member member = Member.builder()
                 .name(signUpDto.getName())
                 .username(signUpDto.getUsername())
                 .password(signUpDto.getPassword())
                 .nickname(signUpDto.getNickname())
                 .build();
-    }
+        member.library = Library.create(member);
 
-    // Member 에서 Library를 생성하는 게 과연 객체지향 적인가?
-    public Library createAndSetLibrary() {
-        Library createdLibrary = Library.create(this);
-        this.library = createdLibrary;
-        return createdLibrary;
+        return member;
     }
 
 }

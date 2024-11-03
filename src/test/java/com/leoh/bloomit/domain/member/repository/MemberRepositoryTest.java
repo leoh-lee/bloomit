@@ -41,7 +41,7 @@ class MemberRepositoryTest {
         String name = "name";
         String password = "password";
 
-        Member member = createMember(username, nickname, name, password);
+        Member member = Member.create(username, password, name, nickname);
 
         memberRepository.save(member);
 
@@ -63,7 +63,7 @@ class MemberRepositoryTest {
         String name = "name";
         String password = "password";
 
-        Member member = createMember(username, nickname, name, password);
+        Member member = Member.create(username, password, name, nickname);
         memberRepository.save(member);
         em.flush();
         // when
@@ -83,12 +83,4 @@ class MemberRepositoryTest {
         assertThat(result).isFalse();
     }
 
-    private Member createMember(String username, String nickname, String name, String password) {
-        return Member.builder()
-                .username(username)
-                .nickname(nickname)
-                .name(name)
-                .password(password)
-                .build();
-    }
 }

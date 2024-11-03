@@ -30,8 +30,8 @@ class MemberServiceTest {
         String nickname = "nickname";
         String name = "name";
         String password = "password";
-        Member member = createMember(username, nickname, name, password);
-        Member member2 = createMember(username, "nickname2", "name2", "password2");
+        Member member = Member.create(username, password, name, nickname);
+        Member member2 = Member.create(username, "password2", "name2", "nickname2");
         memberService.save(member);
         // when
         // then
@@ -48,7 +48,7 @@ class MemberServiceTest {
         String nickname = "nickname";
         String name = "name";
         String password = "password";
-        Member member = createMember(username, nickname, name, password);
+        Member member = Member.create(username, password, name, nickname);
 
         // when
         memberService.save(member);
@@ -66,12 +66,4 @@ class MemberServiceTest {
 
     }
 
-    private Member createMember(String username, String nickname, String name, String password) {
-        return Member.builder()
-                .username(username)
-                .nickname(nickname)
-                .name(name)
-                .password(password)
-                .build();
-    }
 }
