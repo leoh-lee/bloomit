@@ -1,9 +1,10 @@
 package com.leoh.bloomit.common.dto;
 
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
-@RequiredArgsConstructor
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
 
     private final int status;
