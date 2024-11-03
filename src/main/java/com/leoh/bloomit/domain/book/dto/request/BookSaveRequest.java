@@ -1,16 +1,13 @@
 package com.leoh.bloomit.domain.book.dto.request;
 
 import com.leoh.bloomit.domain.book.entity.Book;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class BookSaveRequest {
 

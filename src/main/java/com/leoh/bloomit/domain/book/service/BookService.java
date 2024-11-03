@@ -3,6 +3,7 @@ package com.leoh.bloomit.domain.book.service;
 import com.leoh.bloomit.domain.book.dto.request.BookSaveRequest;
 import com.leoh.bloomit.domain.book.dto.request.BookSearchRequest;
 import com.leoh.bloomit.domain.book.dto.response.BookResponse;
+import com.leoh.bloomit.domain.book.entity.Book;
 import com.leoh.bloomit.domain.book.entity.collection.Books;
 import com.leoh.bloomit.domain.book.enums.BookSearchType;
 import com.leoh.bloomit.domain.book.repository.BookRepository;
@@ -22,8 +23,9 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public void save(BookSaveRequest request) {
-        bookRepository.save(request.toEntity());
+    public BookResponse createBook(BookSaveRequest request) {
+        Book savedBook = bookRepository.save(request.toEntity());
+        return BookResponse.fromEntity(savedBook);
     }
 
     public List<BookResponse> search(BookSearchRequest bookSearchRequest) {
