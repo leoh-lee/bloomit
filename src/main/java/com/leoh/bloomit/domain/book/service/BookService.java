@@ -4,6 +4,7 @@ import com.leoh.bloomit.domain.book.dto.request.BookSaveRequest;
 import com.leoh.bloomit.domain.book.dto.request.BookSearchRequest;
 import com.leoh.bloomit.domain.book.dto.response.BookResponse;
 import com.leoh.bloomit.domain.book.entity.Book;
+import com.leoh.bloomit.domain.book.entity.collection.Books;
 import com.leoh.bloomit.domain.book.enums.BookSearchType;
 import com.leoh.bloomit.domain.book.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,47 +23,45 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public void save(BookSaveRequest request) {
-        bookRepository.save(request.toEntity());
+    public BookResponse createBook(BookSaveRequest request) {
+        Book savedBook = bookRepository.save(request.toEntity());
+        return BookResponse.fromEntity(savedBook);
     }
 
     public List<BookResponse> search(BookSearchRequest bookSearchRequest) {
+        validateSearchRequest(bookSearchRequest);
 
-        BookSearchType bookSearchType = bookSearchRequest.getBookSearchType();
-        String keyword = bookSearchRequest.getKeyword();
+        Books findBooks = findBooksByBookSearchType(bookSearchRequest);
 
-        if (ObjectUtils.isEmpty(bookSearchType)) {
+        return findBooks.toBookResponse();
+    }
+
+    private void validateSearchRequest(BookSearchRequest bookSearchRequest) {
+        if (ObjectUtils.isEmpty(bookSearchRequest.getBookSearchType())) {
             throw new IllegalArgumentException("BookSearchType cannot be null or empty");
         }
 
-        if (!StringUtils.hasText(keyword)) {
+        if (!StringUtils.hasText(bookSearchRequest.getKeyword())) {
             throw new IllegalArgumentException("Keyword cannot be null or empty");
         }
-
-        List<Book> findBooks = findBooksByBookSearchType(bookSearchType, keyword);
-
-        if (findBooks.isEmpty()) {
-            return List.of();    
-        }
-
-        return findBooks.stream()
-                .map(BookResponse::fromEntity)
-                .toList();
     }
-    
-    private List<Book> findBooksByBookSearchType(BookSearchType bookSearchType, String keyword) {
+
+    private Books findBooksByBookSearchType(BookSearchRequest bookSearchRequest) {
+        BookSearchType bookSearchType = bookSearchRequest.getBookSearchType();
+        String keyword = bookSearchRequest.getKeyword();
+
         if (bookSearchType == BookSearchType.TITLE) {
-            return bookRepository.findByTitleContaining(keyword);
+            return Books.of(bookRepository.findByTitleContaining(keyword));
         }
 
         if (bookSearchType == BookSearchType.ISBN) {
-            return bookRepository.findByIsbn(keyword);
+            return Books.of(bookRepository.findByIsbn(keyword));
         }
 
         if (bookSearchType == BookSearchType.AUTHOR) {
-            return bookRepository.findByAuthorContaining(keyword);
+            return Books.of(bookRepository.findByAuthorContaining(keyword));
         }
 
-        return bookRepository.findByPublisherContaining(keyword);
+        return Books.of(bookRepository.findByPublisherContaining(keyword));
     }
 }

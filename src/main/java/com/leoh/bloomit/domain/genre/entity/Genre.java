@@ -1,12 +1,13 @@
 package com.leoh.bloomit.domain.genre.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.leoh.bloomit.domain.bookgenre.entity.BookGenre;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -19,6 +20,13 @@ public class Genre {
 
     private String name;
 
-    private String country;
+    @OneToMany(mappedBy = "genre")
+    private List<BookGenre> bookGenre = new ArrayList<>();
+
+    public static Genre create(String name) {
+        Genre genre = new Genre();
+        genre.name = name;
+        return genre;
+    }
 
 }

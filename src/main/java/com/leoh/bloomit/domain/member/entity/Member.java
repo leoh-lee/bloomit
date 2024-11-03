@@ -2,23 +2,20 @@ package com.leoh.bloomit.domain.member.entity;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
 import com.leoh.bloomit.common.entity.BaseEntity;
+import com.leoh.bloomit.domain.library.entity.Library;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Builder
 @Getter
-@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
-public class Member extends BaseEntity implements UserDetails {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,40 +38,32 @@ public class Member extends BaseEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "library_id")
+    private Library library;
+
+    public static Member create(String username, String password, String name, String nickname) {
+        Member member = Member.builder()
+                .name(name)
+                .username(username)
+                .password(password)
+                .nickname(nickname)
+                .build();
+        member.library = Library.create(member);
+
+        return member;
+    }
+
     public static Member from(SignUpDto signUpDto) {
-        return Member.builder()
+        Member member = Member.builder()
                 .name(signUpDto.getName())
                 .username(signUpDto.getUsername())
                 .password(signUpDto.getPassword())
                 .nickname(signUpDto.getNickname())
                 .build();
-    }
+        member.library = Library.create(member);
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+        return member;
     }
 
 }

@@ -21,8 +21,7 @@ public class Library extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "library")
     private Member member;
 
     @OneToMany(mappedBy = "library")
