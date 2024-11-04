@@ -6,7 +6,8 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Setter
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class BookSearchRequest {
 
     private BookSearchType bookSearchType;
