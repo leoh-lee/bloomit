@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leoh.bloomit.domain.book.dto.request.BookSaveRequest;
 import com.leoh.bloomit.domain.book.dto.response.BookResponse;
 import com.leoh.bloomit.domain.book.service.BookService;
+import com.leoh.bloomit.security.TestSecurityConfig;
 import com.leoh.bloomit.security.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,14 +19,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @ActiveProfiles("test")
 @WebMvcTest(BookController.class)
+@Import(TestSecurityConfig.class)
 class BookControllerTest {
 
     @Autowired
@@ -59,10 +62,37 @@ class BookControllerTest {
         // when
         // then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/books")
-                .content(objectMapper.writeValueAsString(bookSaveRequest))
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-        ).andExpect(MockMvcResultMatchers.status().isOk());
+                        .content(objectMapper.writeValueAsString(bookSaveRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DisplayName("책을 검색한다.")
+    @WithMockCustomUser
+    void searchByTitle() throws Exception {
+        // given
+        List<BookResponse> bookResponses = List.of(
+                BookResponse.builder().title("Effective Java").isbn(UUID.randomUUID().toString()).build(),
+                BookResponse.builder().title("Java is good").isbn(UUID.randomUUID().toString()).build()
+        );
+
+        when(bookService.search(any())).thenReturn(bookResponses);
+
+        // when
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/books")
+                        .queryParam("keyword", "Java")
+                        .queryParam("bookSearchType", "TITLE")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value("Effective Java"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].title").value("Java is good"))
+        ;
+
     }
 
 }
