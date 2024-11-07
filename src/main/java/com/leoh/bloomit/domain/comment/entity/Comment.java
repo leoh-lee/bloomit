@@ -1,6 +1,7 @@
 package com.leoh.bloomit.domain.comment.entity;
 
 import com.leoh.bloomit.common.entity.BaseEntity;
+import com.leoh.bloomit.domain.comment.enums.CommentTargetType;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.post.entity.Post;
 import jakarta.persistence.*;
@@ -21,9 +22,12 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CommentTargetType commentTargetType;
+
+    @Column(nullable = false)
+    private Long commentTargetId;
 
     @Lob
     @Column(nullable = false)

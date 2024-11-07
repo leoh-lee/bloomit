@@ -1,6 +1,7 @@
 package com.leoh.bloomit.domain.like.entity;
 
 import com.leoh.bloomit.common.entity.BaseEntity;
+import com.leoh.bloomit.domain.like.enums.LikeTargetType;
 import com.leoh.bloomit.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -25,6 +26,7 @@ public class Like extends BaseEntity {
     private Long targetId;
 
     @Column(nullable = false)
-    private String targetType;
+    @Enumerated(EnumType.STRING)
+    private LikeTargetType likeTargetType;
 
 }

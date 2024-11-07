@@ -21,7 +21,7 @@ public class Library extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "library")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @OneToMany(mappedBy = "library")
@@ -48,4 +48,5 @@ public class Library extends BaseEntity {
 
         libraryBooks.addAll(newLibraryBooks);
     }
+
 }
