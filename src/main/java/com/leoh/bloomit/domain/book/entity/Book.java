@@ -40,4 +40,10 @@ public class Book extends BaseEntity {
 
     private String description;
 
+    private String tableOfContents;
+
+    private String country;
+
+    private int pages;
+
 }

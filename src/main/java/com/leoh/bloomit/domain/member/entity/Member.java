@@ -2,7 +2,7 @@ package com.leoh.bloomit.domain.member.entity;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
 import com.leoh.bloomit.common.entity.BaseEntity;
-import com.leoh.bloomit.domain.library.entity.Library;
+import com.leoh.bloomit.domain.member.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,36 +34,30 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "library_id")
-    private Library library;
-
     public static Member create(String username, String password, String name, String nickname) {
-        Member member = Member.builder()
+        return Member.builder()
                 .name(name)
                 .username(username)
                 .password(password)
                 .nickname(nickname)
                 .build();
-        member.library = Library.create(member);
-
-        return member;
     }
 
     public static Member from(SignUpDto signUpDto) {
-        Member member = Member.builder()
+        return Member.builder()
                 .name(signUpDto.getName())
                 .username(signUpDto.getUsername())
                 .password(signUpDto.getPassword())
                 .nickname(signUpDto.getNickname())
                 .build();
-        member.library = Library.create(member);
-
-        return member;
     }
 
 }
