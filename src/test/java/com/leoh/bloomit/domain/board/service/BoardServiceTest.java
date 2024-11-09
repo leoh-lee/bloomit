@@ -2,8 +2,6 @@ package com.leoh.bloomit.domain.board.service;
 
 import com.leoh.bloomit.domain.board.dto.request.BoardCreateRequest;
 import com.leoh.bloomit.domain.board.dto.response.BoardResponse;
-import com.leoh.bloomit.domain.boardtype.entity.BoardType;
-import com.leoh.bloomit.domain.boardtype.service.BoardTypeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +15,12 @@ class BoardServiceTest {
     @Autowired
     private BoardService boardService;
 
-    @Autowired
-    private BoardTypeService boardTypeService;
-
     @Test
     @DisplayName("게시판을 하나 생성한다.")
     void createBoard() {
         // given
         String boardName = "boardName";
-        String boardTypeName = "토론";
-        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder().name(boardName).boardType(boardTypeName).build();
-        BoardType boardType = BoardType.create(boardName, "board Type");
-        boardTypeService.createBoardType(boardType);
+        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder().name(boardName).build();
         // when
         BoardResponse boardResponse = boardService.createBoard(boardCreateRequest);
         // then

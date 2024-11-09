@@ -1,6 +1,7 @@
 package com.leoh.bloomit.domain.member.repository;
 
 import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.enums.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,9 @@ class MemberRepositoryTest {
         String nickname = "dog";
         String name = "name";
         String password = "password";
+        Gender gender = Gender.MALE;
 
-        Member member = Member.create(username, password, name, nickname);
+        Member member = Member.create(username, password, name, nickname, gender);
 
         memberRepository.save(member);
 
@@ -62,8 +64,9 @@ class MemberRepositoryTest {
         String nickname = "dog";
         String name = "name";
         String password = "password";
+        Gender gender = Gender.MALE;
 
-        Member member = Member.create(username, password, name, nickname);
+        Member member = Member.create(username, password, name, nickname, gender);
         memberRepository.save(member);
         em.flush();
         // when

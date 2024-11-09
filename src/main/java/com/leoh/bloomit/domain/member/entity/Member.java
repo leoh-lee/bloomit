@@ -42,12 +42,13 @@ public class Member extends BaseEntity {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    public static Member create(String username, String password, String name, String nickname) {
+    public static Member create(String username, String password, String name, String nickname, Gender gender) {
         return Member.builder()
                 .name(name)
                 .username(username)
                 .password(password)
                 .nickname(nickname)
+                .gender(gender)
                 .build();
     }
 
@@ -57,6 +58,7 @@ public class Member extends BaseEntity {
                 .username(signUpDto.getUsername())
                 .password(signUpDto.getPassword())
                 .nickname(signUpDto.getNickname())
+                .gender(signUpDto.getGender())
                 .build();
     }
 

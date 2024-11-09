@@ -5,6 +5,7 @@ import com.leoh.bloomit.domain.book.repository.BookRepository;
 import com.leoh.bloomit.domain.library.entity.Library;
 import com.leoh.bloomit.domain.librarybook.repository.LibraryBookRepository;
 import com.leoh.bloomit.domain.member.entity.Member;
+import com.leoh.bloomit.domain.member.enums.Gender;
 import com.leoh.bloomit.domain.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -42,11 +43,9 @@ class LibraryRepositoryTest {
     @DisplayName("특정 회원의 서재를 조회한다.")
     void findByMember() {
         //given
-        Member member = Member.create("username", "password]", "name", "nickname");
-
+        Member member = Member.create("username", "password", "name", "nickname", Gender.MALE);
         memberRepository.save(member);
-        em.flush();
-        em.clear();
+
         String bookTitle1 = "effective java";
         String bookTitle2 = "함께자라기";
         String bookTitle3 = "실용주의 프로그래머";
@@ -58,29 +57,23 @@ class LibraryRepositoryTest {
         Book growthTogether = createBookAndSave(bookTitle2, author2);
         Book programmer = createBookAndSave(bookTitle3, author3);
 
-        Library library = libraryRepository.findByMemberId(member.getId());
+        Library library1 = Library.create(member, "library1");
+        Library library2 = Library.create(member, "library2");
 
-        library.addBooks(List.of(
-                effectiveJava, growthTogether, programmer
-        ));
+        library1.addBooks(List.of(effectiveJava, growthTogether, programmer));
+        library2.addBooks(List.of(effectiveJava, programmer));
 
-        libraryBookRepository.saveAll(library.getLibraryBooks());
-
+        libraryRepository.saveAll(List.of(library1, library2));
         em.flush();
         em.clear();
         // when
-        Library findLibrary = libraryRepository.findByMemberId(member.getId());
-
+        List<Library> findLibraries = libraryRepository.findByMemberId(member.getId());
         // then
-        assertThat(findLibrary.getId()).isEqualTo(library.getId());
-        assertThat(findLibrary.getMember().getId()).isEqualTo(member.getId());
-        assertThat(findLibrary.getBooks())
-                .extracting("title", "author")
-                .containsExactlyInAnyOrder(
-                        tuple(bookTitle1, author1),
-                        tuple(bookTitle2, author2),
-                        tuple(bookTitle3, author3)
-                );
+        assertThat(findLibraries).hasSize(2);
+        assertThat(findLibraries.get(0).getLibraryBooks()).hasSize(3);
+        assertThat(findLibraries.get(1).getLibraryBooks()).hasSize(2);
+        assertThat(findLibraries.get(0).getMember().getId()).isEqualTo(member.getId());
+        assertThat(findLibraries.get(1).getMember().getId()).isEqualTo(member.getId());
     }
 
     private Book createBookAndSave(String bookTitle, String author) {

@@ -1,6 +1,8 @@
 package com.leoh.bloomit.auth.dto;
 
+import com.leoh.bloomit.domain.member.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,9 @@ public class SignUpDto {
     @NotBlank
     @Size(min = 2, max = 16)
     private String nickname;
+
+    @NotNull
+    private Gender gender;
 
     public void changePassword(String password) {
         this.password = password;
