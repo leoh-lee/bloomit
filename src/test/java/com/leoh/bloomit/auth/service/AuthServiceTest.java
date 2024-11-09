@@ -2,6 +2,7 @@ package com.leoh.bloomit.auth.service;
 
 import com.leoh.bloomit.auth.dto.SignUpDto;
 import com.leoh.bloomit.domain.member.dto.response.MemberResponse;
+import com.leoh.bloomit.domain.member.enums.Gender;
 import com.leoh.bloomit.domain.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,8 @@ class AuthServiceTest {
         String name = "name";
         String password = "password";
         String nickname = "nickname";
-        SignUpDto signUpDto = new SignUpDto(username, password, name, nickname);
+        Gender gender = Gender.MALE;
+        SignUpDto signUpDto = new SignUpDto(username, password, name, nickname, gender);
         // when
         authService.signUp(signUpDto);
         // then

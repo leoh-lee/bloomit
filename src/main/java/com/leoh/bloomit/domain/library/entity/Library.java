@@ -24,15 +24,18 @@ public class Library extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @OneToMany(mappedBy = "library")
+    private String libraryName;
+
+    @OneToMany(mappedBy = "library", cascade = CascadeType.PERSIST)
     private List<LibraryBook> libraryBooks = new ArrayList<>();
 
-    private Library(Member member) {
+    private Library(Member member, String libraryName) {
         this.member = member;
+        this.libraryName = libraryName;
     }
 
-    public static Library create(Member member) {
-        return new Library(member);
+    public static Library create(Member member, String libraryName) {
+        return new Library(member, libraryName);
     }
 
     public List<Book> getBooks() {
