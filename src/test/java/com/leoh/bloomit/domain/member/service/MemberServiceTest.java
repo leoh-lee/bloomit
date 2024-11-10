@@ -2,7 +2,6 @@ package com.leoh.bloomit.domain.member.service;
 
 import com.leoh.bloomit.common.exception.ErrorCode;
 import com.leoh.bloomit.common.exception.ResourceNotFoundException;
-import com.leoh.bloomit.domain.library.service.LibraryService;
 import com.leoh.bloomit.domain.member.dto.response.MemberResponse;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.enums.Gender;
@@ -27,9 +26,6 @@ class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;
-
-    @Autowired
-    private LibraryService libraryService;
 
     private Member member;
 
