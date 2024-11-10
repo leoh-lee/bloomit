@@ -8,6 +8,9 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 암호화된 password를 세팅하기 위해 예외적으로 record를 사용하지 않는 DTO
+ */
 @Getter
 @AllArgsConstructor
 public class SignUpDto {
