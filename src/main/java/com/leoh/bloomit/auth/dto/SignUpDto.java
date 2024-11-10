@@ -7,16 +7,18 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 암호화된 password를 세팅하기 위해 예외적으로 record를 사용하지 않는 DTO
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class SignUpDto {
 
-    @NotBlank
-    @Size(min = 5, max = 20)
+    @NotBlank(message = "사용자 ID를 입력해주세요.")
+    @Size(min = 5, max = 20, message = "사용자 ID는 5자 이상, 20자 이하여야 합니다.")
     private String username;
 
     @NotBlank
