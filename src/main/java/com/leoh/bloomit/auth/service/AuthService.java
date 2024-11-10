@@ -26,7 +26,7 @@ public class AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public JwtToken signIn(SignInDto signInDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInDto.getUsername(), signInDto.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInDto.username(), signInDto.password());
 
         AuthenticationManager authenticationManager = authenticationManagerBuilder.getObject();
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
