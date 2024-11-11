@@ -1,8 +1,8 @@
 package com.leoh.bloomit.auth.controller;
 
-import com.leoh.bloomit.auth.dto.SignUpDto;
+import com.leoh.bloomit.auth.dto.request.SignUpRequest;
 import com.leoh.bloomit.auth.service.AuthService;
-import com.leoh.bloomit.auth.dto.SignInDto;
+import com.leoh.bloomit.auth.dto.request.SignInRequest;
 import com.leoh.bloomit.security.jwt.JwtToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<JwtToken> signIn(@Valid @RequestBody SignInDto signInDto) {
-        JwtToken jwtToken = authService.signIn(signInDto);
+    public ResponseEntity<JwtToken> signIn(@Valid @RequestBody SignInRequest signInRequest) {
+        JwtToken jwtToken = authService.signIn(signInRequest);
         if (ObjectUtils.isEmpty(jwtToken)) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -35,8 +35,8 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@Valid @RequestBody SignUpDto signUpDto) {
-        authService.signUp(signUpDto);
+    public void signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+        authService.signUp(signUpRequest);
     }
 
 }

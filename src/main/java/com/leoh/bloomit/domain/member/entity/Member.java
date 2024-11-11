@@ -1,6 +1,6 @@
 package com.leoh.bloomit.domain.member.entity;
 
-import com.leoh.bloomit.auth.dto.SignUpDto;
+import com.leoh.bloomit.auth.dto.request.SignUpRequest;
 import com.leoh.bloomit.common.entity.BaseEntity;
 import com.leoh.bloomit.domain.member.enums.Gender;
 import jakarta.persistence.*;
@@ -52,13 +52,13 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public static Member from(SignUpDto signUpDto) {
+    public static Member from(SignUpRequest signUpRequest) {
         return Member.builder()
-                .name(signUpDto.getName())
-                .username(signUpDto.getUsername())
-                .password(signUpDto.getPassword())
-                .nickname(signUpDto.getNickname())
-                .gender(signUpDto.getGender())
+                .name(signUpRequest.getName())
+                .username(signUpRequest.getUsername())
+                .password(signUpRequest.getPassword())
+                .nickname(signUpRequest.getNickname())
+                .gender(signUpRequest.getGender())
                 .build();
     }
 
