@@ -1,7 +1,7 @@
 package com.leoh.bloomit.auth.service;
 
-import com.leoh.bloomit.auth.dto.SignInDto;
-import com.leoh.bloomit.auth.dto.SignUpDto;
+import com.leoh.bloomit.auth.dto.request.SignInRequest;
+import com.leoh.bloomit.auth.dto.request.SignUpRequest;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.service.MemberService;
 import com.leoh.bloomit.security.jwt.JwtToken;
@@ -25,8 +25,8 @@ public class AuthService {
     private final MemberService memberService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public JwtToken signIn(SignInDto signInDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInDto.username(), signInDto.password());
+    public JwtToken signIn(SignInRequest signInRequest) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInRequest.username(), signInRequest.password());
 
         AuthenticationManager authenticationManager = authenticationManagerBuilder.getObject();
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
@@ -34,10 +34,10 @@ public class AuthService {
         return jwtTokenProvider.generateToken(authentication);
     }
 
-    public void signUp(SignUpDto signUpDto) {
-        String encodedPassword = bCryptPasswordEncoder.encode(signUpDto.getPassword());
-        signUpDto.changePassword(encodedPassword);
-        memberService.save(Member.from(signUpDto));
+    public void signUp(SignUpRequest signUpRequest) {
+        String encodedPassword = bCryptPasswordEncoder.encode(signUpRequest.getPassword());
+        signUpRequest.changePassword(encodedPassword);
+        memberService.save(Member.from(signUpRequest));
     }
 
 }

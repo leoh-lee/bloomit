@@ -1,6 +1,6 @@
 package com.leoh.bloomit.auth.service;
 
-import com.leoh.bloomit.auth.dto.SignUpDto;
+import com.leoh.bloomit.auth.dto.request.SignUpRequest;
 import com.leoh.bloomit.domain.member.dto.response.MemberResponse;
 import com.leoh.bloomit.domain.member.enums.Gender;
 import com.leoh.bloomit.domain.member.service.MemberService;
@@ -36,9 +36,9 @@ class AuthServiceTest {
         String password = "password";
         String nickname = "nickname";
         Gender gender = Gender.MALE;
-        SignUpDto signUpDto = new SignUpDto(username, password, name, nickname, gender);
+        SignUpRequest signUpRequest = new SignUpRequest(username, password, name, nickname, gender);
         // when
-        authService.signUp(signUpDto);
+        authService.signUp(signUpRequest);
         // then
         MemberResponse findMember = memberService.findByUsername(username);
         assertThat(findMember).isNotNull()

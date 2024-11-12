@@ -1,4 +1,4 @@
-package com.leoh.bloomit.auth.dto;
+package com.leoh.bloomit.auth.dto.request;
 
 import com.leoh.bloomit.domain.member.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpDto {
+public class SignUpRequest {
 
     @NotBlank(message = "사용자 ID를 입력해주세요.")
     @Size(min = 5, max = 20, message = "사용자 ID는 5자 이상, 20자 이하여야 합니다.")

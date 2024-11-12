@@ -32,4 +32,7 @@ public class MemberService {
                 .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
     }
 
+    public Member getReferenceById(Long id) {
+        return memberRepository.getReferenceById(id);
+    }
 }
