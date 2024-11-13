@@ -5,9 +5,12 @@ import com.leoh.bloomit.domain.book.service.BookService;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.service.MemberService;
 import com.leoh.bloomit.domain.review.dto.request.ReviewCreateRequest;
+import com.leoh.bloomit.domain.review.dto.response.ReviewResponse;
 import com.leoh.bloomit.domain.review.entity.Review;
 import com.leoh.bloomit.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,5 +34,13 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return savedReview.getId();
+    }
+
+    public Page<ReviewResponse> searchReviewsByBookId(Long bookId, Pageable pageable) {
+        Book book = bookService.getReferenceById(bookId);
+
+        Page<Review> reviewPage = reviewRepository.findAllByBook(book, pageable);
+
+        return reviewPage.map(ReviewResponse::fromEntity);
     }
 }
