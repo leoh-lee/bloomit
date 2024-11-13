@@ -5,6 +5,7 @@ import com.leoh.bloomit.domain.book.service.BookService;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.service.MemberService;
 import com.leoh.bloomit.domain.review.dto.request.ReviewCreateRequest;
+import com.leoh.bloomit.domain.review.dto.response.ReviewResponse;
 import com.leoh.bloomit.domain.review.entity.Review;
 import com.leoh.bloomit.domain.review.repository.ReviewRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,6 +55,26 @@ class ReviewServiceTest {
         Long savedId = reviewService.createReview(request);
         // then
         assertThat(savedId).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("도서 ID로 리뷰리스트 조회")
+    void getReviewsByBookId() {
+        // given
+        Book book = Book.builder().id(1L).title("effective Java").build();
+        Member member = Member.builder().id(1L).name("leoh").build();
+        Page<Review> reviews = new PageImpl<>(List.of(Review.builder().id(1L).book(book).writer(member).build()));
+        Pageable pageable = PageRequest.of(1, 5);
+
+        when(bookService.getReferenceById(1L)).thenReturn(Book.builder().id(1L).build());
+        when(reviewRepository.findAllByBook(any(), any())).thenReturn(reviews);
+
+        ReviewService reviewService = new ReviewService(reviewRepository, bookService, memberService);
+        // when
+        Page<ReviewResponse> responses = reviewService.searchReviewsByBookId(book.getId(), pageable);
+        // then
+        assertThat(responses).isNotNull();
+        assertThat(responses.getTotalElements()).isEqualTo(1);
     }
 
 }

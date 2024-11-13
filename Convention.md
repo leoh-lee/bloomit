@@ -24,3 +24,4 @@
   - 문자열의 경우 StringUtils.hasText() 사용
 - equals(), hashcode() 생성
   - IDE 자동 생성
+- 서비스 레이어에서 조회 메서드의 prefix는 search
