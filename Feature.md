@@ -1,0 +1,170 @@
+## 왓챠피디아 분석
+효율적인 개발을 위해 다른 책 리뷰 서비스를 분석하였습니다.
+
+### 메인 화면 
+[왓챠피디아 메인화면 Link](https://pedia.watcha.com/ko-KR/?domain=book)
+
+주제 별 책 차트
+  - 차트
+    - 차트 타입 (신간 베스트 셀러, 책 검색 순위 등)
+    - 컨텐츠 타입 (book 등)
+    - 차트 명 (신간 베스트셀러 순위)
+    - 아이템
+      - 책 표지
+        - 사이즈별 (hd, xlarge, large, medium, small)
+      - 책 제목
+      - 순위
+      - 평점
+      - 책 ID
+      - 연도
+
+### 책 페이지 (단 건)
+[왓챠피디아 책 한권 Link](https://pedia.watcha.com/ko-KR/contents/boGv00R)
+- metadata
+  - ad
+  - event
+- result
+  - code (String): 책 코드
+  - content_type (String) (ex. books)
+  - title (String): 책 제목
+  - year (Integer): 출간 연도
+  - poster (Object): 사이즈별 포스터 (hd, xlarge, large, medium, small)
+  - background_color (String): 배경색 (왜 필요한 지 분석필요) 
+  - rating_avg (Double? BigDecimal?): 평점 평균
+  - author_names (List): 저자 리스트
+  - rating_count (Integer): 별점 개수
+  - wishes_count (Integer): 읽고싶어요 개수
+  - stillcut (null): 영화 스티컷일 듯
+  - nations (List)
+    - name (String): 국가
+  - genres (List) : 장르
+  - current_context: null이 담겨서 무슨 역할인 지 모르겠음
+  - description (String): 책 설명
+  - short_description (String): 짧은 설명? 왓챠피디아에서는 null 반환
+  - videos (List): 관련 영상
+  - credits (Object)
+    - 영화를 보면 나오는 엔딩 크레딧 같이 작품의 제작에 관여 한 캐스트나 스탭의 명부
+    - department (String): "작가", "번역가" 등의 정보
+    - job (String): "저자" 등의 정보
+      - 해당 작품에 참여한 "작가" 이지만, "저자"는 아닐 수 있으므로?
+    - character (List): 성격..? 등장인물..?
+    - person (Object):
+      - id (Long)
+      - code (String)
+      - name (String) : person 이름
+      - photo (Object) : 사이즈별 사진
+    - is_clickable (boolean) : 클릭하여 상세화면으로 이동할 수 있는 credit인 지 여부
+  - external_services (List): 외부 서비스 (도서 구매 링크 혹은 시청 가능한 OTT 링크)
+    - id (String)
+    - name (String): 외부 서비스 명
+    - icon (String): 외부 서비스 아이콘
+    - action (String): 행위명 (ex. buy)
+    - action_label (String): 행위명 (ex. "구매하기")
+    - href (String): 링크
+    - is_collaborate
+    - is_outlink
+    - price (Integer): 도서 가격
+  - comments (Object): 코멘트
+    - result (List)
+      - code (String): 코멘트 코드
+      - user (Object): 댓글 작성자
+        - code (String): 작성자 코드
+        - name (String): 작성자 명
+        - photo (Object): 작성자 프로필 사진 (크기 별 이미지 링크)
+        - watcha_play_user (Boolean): 왓챠플레이 유저 여부
+        - official_user (Boolean): Official User 여부
+      - text (String): 코멘트 내용
+      - likes_count (Integer): 좋아요 개수
+      - replies_count (Integer): 댓글 개수
+      - content_code (String): 코멘트 대상 컨텐츠 코드
+      - user_code (String): 작성자 코드
+      - watched_at (String): 시청일
+      - spoiler (Boolean): 스포일러 포함인 지 여부
+      - improper (Boolean): 부적절한 내용 포함인 지 여부
+      - replyable (Boolean): 댓글을 작성할 수 있는 지 여부
+      - created_at (String): 작성일자
+      - user_content_action (Object)
+        - rating (Integer): 별점
+          - 0 ~ 10 사이의 숫자를 입력받아, 5를 곱한 뒤 10을 나눠 주면 별점
+        - status (null): 상태?
+        - mehed: 알 수 없음
+        - wathced_at (String): 시청일
+        - user_code (String): 사용자 코드
+        - content_code (String): 컨텐츠 (ex. 책, 영화) 코드 
+    - comments_count (Integer): 코멘트 개수
+    - ratings_distribution (Object): 별점 별 개수
+      - 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 각각의 개수
+    - gallery
+    - decks (Object): 이 작품이 담긴 컬렉션
+      - result (List)
+        - code (String): 컬렉션코드
+        - title (String): 컬렉션 제목
+        - description (String): 컬렉션 설명
+        - contents_count (Integer): 컨텐츠 개수
+        - likes_count (Integer): 좋아요 개수
+        - replies_count (Integer): 댓글 개수
+        - created_at (String): 생성일시
+        - updated_at (String): 수정일시
+        - user (Object): 사용자 정보
+          - code (Stirng): 사용자 코드
+          - name (String): 사용자 명
+          - photo (Object): 사이즈 별 사용자 프로필 사진
+          - watcha_play_user (Boolean): 왓챠플레이 유저 여부
+          - official_user (Boolean): Official User 여부
+        - poster_images (List): 컬렉션 컨텐츠의 포스터 이미지 리스트
+          - content_type (Stirng): 컨텐츠 타입 (ex. books, movies)
+          - url (String): 이미지 URL
+    - decks_count (Integer): 컬렉션 개수
+    - similars (Object): 유사한 책 리스트
+    - ranking (Object)
+      - chart_name (Stirng): 랭킹 차트 명 (ex. 신간 베스트셀러 순위)
+      - rank (Integer): 순위
+    - subtitle (Stirng): 부제목
+    - content (String): 목자
+      - "\n"등을 사용하여 출력
+    - publisher_description (String): 출판사 제공 설명
+    - author_description (String): 작가 설명
+    - pages (Integer): 페이지 수
+    - preview_images (List): 미리보기 사진
+    - is_adult (Boolean): 성인 연령제한 여부
+    - artists (List)
+      - id (Long): 아티스트 ID
+      - code (String): 아티스트 코드
+      - name (String): 아티스트 명
+    - age_rating_short (String): 이용가 (ex. "전체")
+    - age_rating_long (String): 이용가 긴 버전 (ex. "전체 이용가")
+
+### 검색 화면
+- 타이핑할 때 마다 자동완성 검색어 조회 통신 발생
+#### 검색 결과 화면 데이터
+- query(String): 검색어
+- search_id(String): 검색 id? (UUID처럼 보임)
+- top_results(List):
+  - code(String): 컨텐츠 코드
+  - content_type(String): 컨텐츠 타입 (ex. books, movies..)
+  - title(String): 컨텐츠 명
+  - year(Integer): 출간연도
+  - poster(Object): 사이즈 별 컨텐츠 포스터
+  - background_color(String): 배경색
+  - author_names(List): 저자 리스트
+  - nations(List): 국가 리스트
+
+### 마이 페이지
+- action_counts(Object)
+  - books, movies, tv_sesions, webtoon(Object): 
+    - comments, doings, mehs, ratings, wishes 의 개수
+- code(String): 사용자 코드
+- decks_count(Integer): 컬렉션 개수
+- follower_count(Integer): 팔로워 수
+- friends_count(Integer): 팔로잉 수
+- like_counts(Object): 좋아요 개수
+  - 컬렉션
+  - 댓글
+- name(String): 사용자 명
+- official_user(Boolean): Official User 여부
+- people_wisies_count(Integer): 좋아한 인물
+- photo(Object): 사이즈 별 프로필 사진
+- privacy(String): 프라이버시 (ex. all)
+- ratings_count(Integer): 별점 매긴 개수
+- watcha_play_uesr(Boolean): watcha_play 유저 여부
+- wishes_count(Integer): wishes 개수
