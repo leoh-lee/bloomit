@@ -65,8 +65,8 @@ class ReviewServiceTest {
     }
 
     @Test
-    @DisplayName("도서 ID로 리뷰리스트 조회")
-    void getReviewsByBookId() {
+    @DisplayName("도서 ID로 페이징된 리뷰리스트 조회")
+    void getPagingReviewsByBookId() {
         // given
         Book book = Book.builder().id(1L).title("effective Java").build();
         Member member = Member.builder().id(1L).name("leoh").build();
@@ -81,6 +81,25 @@ class ReviewServiceTest {
         // then
         assertThat(responses).isNotNull();
         assertThat(responses.getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("도서 엔티티로 리뷰리스트 조회")
+    void getReviewsByBook() {
+        // given
+        Book book = Book.builder().id(1L).title("effective Java").build();
+        Member member = Member.builder().id(1L).name("leoh").build();
+        List<Review> reviews = List.of(Review.builder().id(1L).book(book).member(member).build());
+
+        when(reviewRepository.findAllByBook(any())).thenReturn(reviews);
+
+        // when
+        List<ReviewResponse> responses = reviewService.searchReviewsByBook(book);
+        // then
+        assertThat(responses).isNotNull();
+        assertThat(responses)
+                .extracting("id")
+                .containsExactlyInAnyOrder(1L);
     }
 
 }
