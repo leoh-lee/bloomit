@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -34,6 +36,12 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return savedReview.getId();
+    }
+
+    public List<ReviewResponse> searchReviewsByBook(Book book) {
+        List<Review> reviews = reviewRepository.findAllByBook(book);
+
+        return reviews.stream().map(ReviewResponse::fromEntity).toList();
     }
 
     public Page<ReviewResponse> searchReviewsByBookId(Long bookId, Pageable pageable) {
