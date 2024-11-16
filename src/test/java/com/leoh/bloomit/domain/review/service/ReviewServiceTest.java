@@ -1,13 +1,14 @@
 package com.leoh.bloomit.domain.review.service;
 
 import com.leoh.bloomit.domain.book.entity.Book;
-import com.leoh.bloomit.domain.book.service.BookService;
+import com.leoh.bloomit.domain.book.respository.BookRepository;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.service.MemberService;
 import com.leoh.bloomit.domain.review.dto.request.ReviewCreateRequest;
 import com.leoh.bloomit.domain.review.dto.response.ReviewResponse;
 import com.leoh.bloomit.domain.review.entity.Review;
 import com.leoh.bloomit.domain.review.repository.ReviewRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,14 +28,21 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
 
+    private ReviewService reviewService;
+
     @Mock
     private ReviewRepository reviewRepository;
 
     @Mock
-    private BookService bookService;
+    private BookRepository bookRepository;
 
     @Mock
     private MemberService memberService;
+
+    @BeforeEach
+    void setUp() {
+        reviewService = new ReviewService(reviewRepository, bookRepository, memberService);
+    }
 
     @Test
     @DisplayName("리뷰 작성")
@@ -46,10 +54,9 @@ class ReviewServiceTest {
                 .content("너무 재밌어요.")
                 .build();
 
-        when(bookService.getReferenceById(1L)).thenReturn(Book.builder().id(1L).build());
+        when(bookRepository.getReferenceById(1L)).thenReturn(Book.builder().id(1L).build());
         when(memberService.getReferenceById(1L)).thenReturn(Member.builder().id(1L).build());
         when(reviewRepository.save(any())).thenReturn(Review.builder().id(1L).build());
-        ReviewService reviewService = new ReviewService(reviewRepository, bookService, memberService);
 
         // when
         Long savedId = reviewService.createReview(request);
@@ -66,10 +73,9 @@ class ReviewServiceTest {
         Page<Review> reviews = new PageImpl<>(List.of(Review.builder().id(1L).book(book).member(member).build()));
         Pageable pageable = PageRequest.of(1, 5);
 
-        when(bookService.getReferenceById(1L)).thenReturn(Book.builder().id(1L).build());
+        when(bookRepository.getReferenceById(1L)).thenReturn(Book.builder().id(1L).build());
         when(reviewRepository.findAllByBook(any(), any())).thenReturn(reviews);
 
-        ReviewService reviewService = new ReviewService(reviewRepository, bookService, memberService);
         // when
         Page<ReviewResponse> responses = reviewService.searchReviewsByBookId(book.getId(), pageable);
         // then

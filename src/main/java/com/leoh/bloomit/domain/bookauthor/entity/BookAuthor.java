@@ -1,28 +1,27 @@
-package com.leoh.bloomit.domain.rating.entity;
+package com.leoh.bloomit.domain.bookauthor.entity;
 
+import com.leoh.bloomit.domain.author.entity.Author;
 import com.leoh.bloomit.domain.book.entity.Book;
-import com.leoh.bloomit.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Rating {
+public class BookAuthor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-
-    @Column(nullable = false, precision = 10, scale = 1)
-    private int rate;
+    @JoinColumn(name = "author_id")
+    private Author author;
 
 }

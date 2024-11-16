@@ -1,8 +1,10 @@
 package com.leoh.bloomit.domain.book.entity;
 
-import com.leoh.bloomit.domain.author.entity.Author;
+import com.leoh.bloomit.domain.bookauthor.entity.BookAuthor;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @Entity
@@ -18,16 +20,17 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-    @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Author author;
+    private String subTitle;
+
+    @OneToMany(mappedBy = "book")
+    private List<BookAuthor> bookAuthors;
 
     @Column(nullable = false)
     private int pages;
 
     private String country;
 
-    private String tableOfContents;
+    private String content;
 
     private String story;
 
