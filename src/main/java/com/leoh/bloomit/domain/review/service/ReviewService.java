@@ -3,7 +3,7 @@ package com.leoh.bloomit.domain.review.service;
 import com.leoh.bloomit.domain.book.entity.Book;
 import com.leoh.bloomit.domain.book.respository.BookRepository;
 import com.leoh.bloomit.domain.member.entity.Member;
-import com.leoh.bloomit.domain.member.service.MemberService;
+import com.leoh.bloomit.domain.member.repository.MemberRepository;
 import com.leoh.bloomit.domain.review.dto.request.ReviewCreateRequest;
 import com.leoh.bloomit.domain.review.dto.response.ReviewResponse;
 import com.leoh.bloomit.domain.review.entity.Review;
@@ -21,10 +21,10 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final BookRepository bookRepository;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     public Long createReview(ReviewCreateRequest request) {
-        Member member = memberService.getReferenceById(request.memberId());
+        Member member = memberRepository.getReferenceById(request.memberId());
         Book book = bookRepository.getReferenceById(request.bookId());
 
         Review review = Review.builder()
