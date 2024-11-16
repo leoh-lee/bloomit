@@ -27,7 +27,7 @@ public class ReviewService {
 
         Review review = Review.builder()
                 .book(book)
-                .writer(member)
+                .member(member)
                 .content(request.content())
                 .build();
 

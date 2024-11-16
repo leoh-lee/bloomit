@@ -63,7 +63,7 @@ class ReviewServiceTest {
         // given
         Book book = Book.builder().id(1L).title("effective Java").build();
         Member member = Member.builder().id(1L).name("leoh").build();
-        Page<Review> reviews = new PageImpl<>(List.of(Review.builder().id(1L).book(book).writer(member).build()));
+        Page<Review> reviews = new PageImpl<>(List.of(Review.builder().id(1L).book(book).member(member).build()));
         Pageable pageable = PageRequest.of(1, 5);
 
         when(bookService.getReferenceById(1L)).thenReturn(Book.builder().id(1L).build());

@@ -23,9 +23,25 @@ public class Review extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member writer;
+    private Member member;
 
     @Lob
     private String content;
+
+    public Long getBookId() {
+        return book.getId();
+    }
+
+    public String getBookTitle() {
+        return book.getTitle();
+    }
+
+    public Long getMemberId() {
+        return member.getId();
+    }
+
+    public String getMemberName() {
+        return member.getName();
+    }
 
 }
