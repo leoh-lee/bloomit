@@ -53,8 +53,4 @@ public class BookService {
                 .publishedYear(book.getPublishedDate())
                 .build();
     }
-
-    public Book getReferenceById(Long id) {
-        return bookRepository.getReferenceById(id);
-    }
 }

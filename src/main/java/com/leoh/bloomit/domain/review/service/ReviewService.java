@@ -1,7 +1,7 @@
 package com.leoh.bloomit.domain.review.service;
 
 import com.leoh.bloomit.domain.book.entity.Book;
-import com.leoh.bloomit.domain.book.service.BookService;
+import com.leoh.bloomit.domain.book.respository.BookRepository;
 import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.service.MemberService;
 import com.leoh.bloomit.domain.review.dto.request.ReviewCreateRequest;
@@ -20,12 +20,12 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final BookService bookService;
+    private final BookRepository bookRepository;
     private final MemberService memberService;
 
     public Long createReview(ReviewCreateRequest request) {
         Member member = memberService.getReferenceById(request.memberId());
-        Book book = bookService.getReferenceById(request.bookId());
+        Book book = bookRepository.getReferenceById(request.bookId());
 
         Review review = Review.builder()
                 .book(book)
@@ -45,7 +45,7 @@ public class ReviewService {
     }
 
     public Page<ReviewResponse> searchReviewsByBookId(Long bookId, Pageable pageable) {
-        Book book = bookService.getReferenceById(bookId);
+        Book book = bookRepository.getReferenceById(bookId);
 
         Page<Review> reviewPage = reviewRepository.findAllByBook(book, pageable);
 
