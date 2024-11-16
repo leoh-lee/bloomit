@@ -7,6 +7,7 @@ import com.leoh.bloomit.domain.member.entity.Member;
 import com.leoh.bloomit.domain.member.enums.Gender;
 import com.leoh.bloomit.domain.member.repository.MemberRepository;
 import com.leoh.bloomit.domain.rating.entity.Rating;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,29 +30,29 @@ class RatingRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @BeforeEach
+    void setUp() {
+        ratingRepository.deleteAllInBatch();
+        bookRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+    }
+
     @Test
     @DisplayName("book으로 평균별점 조회")
     void getRatingAvgByBook() {
         // given
-        Book book = Book.builder()
-                .id(1L)
-                .title("test")
-                .isbn("test")
-                .pages(100)
-                .bookAuthors(List.of(BookAuthor.builder().build()))
-                .build();
-        bookRepository.save(book);
+        Book book = saveDummyBook();
 
-        Member member = Member.builder().username("test").name("test").password("password").gender(Gender.MALE).nickname("test").build();
-        memberRepository.save(member);
+        Member member1 = saveDummyMember();
+        Member member2 = saveDummyMember();
 
         Rating rating1 = Rating.builder()
-                .member(member)
+                .member(member1)
                 .book(book)
                 .rate(7)
                 .build();
         Rating rating2 = Rating.builder()
-                .member(member)
+                .member(member2)
                 .book(book)
                 .rate(6)
                 .build();
@@ -68,33 +69,44 @@ class RatingRepositoryTest {
     @DisplayName("책으로 별점 개수를 조회한다.")
     void countByBook() {
         // given
-        Book book = Book.builder()
-                .id(1L)
-                .title("test")
-                .isbn("test")
-                .pages(100)
-                .bookAuthors(List.of(BookAuthor.builder().build()))
-                .build();
-        bookRepository.save(book);
+        Book book = saveDummyBook();
 
-        Member member = Member.builder().username("test").name("test").password("password").gender(Gender.MALE).nickname("test").build();
-        memberRepository.save(member);
+        Member member1 = saveDummyMember();
+        Member member2 = saveDummyMember();
 
         Rating rating1 = Rating.builder()
-                .member(member)
+                .member(member1)
                 .book(book)
                 .rate(7)
                 .build();
         Rating rating2 = Rating.builder()
-                .member(member)
+                .member(member2)
                 .book(book)
                 .rate(6)
                 .build();
+
         ratingRepository.save(rating1);
         ratingRepository.save(rating2);
         // when
         int result = ratingRepository.countByBook(book);
         // then
         assertThat(result).isEqualTo(2);
+    }
+
+    private Member saveDummyMember() {
+        Member member = Member.builder().username("test").name("test").password("password").gender(Gender.MALE).nickname("test").build();
+        memberRepository.save(member);
+        return member;
+    }
+
+    private Book saveDummyBook() {
+        Book book = Book.builder()
+                .title("test")
+                .isbn("test")
+                .pages(100)
+                .bookAuthors(List.of(BookAuthor.builder().build()))
+                .build();
+        bookRepository.save(book);
+        return book;
     }
 }
