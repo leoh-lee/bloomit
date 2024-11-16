@@ -63,4 +63,38 @@ class RatingRepositoryTest {
         // then
         assertThat(ratingAvgByBook).isEqualTo(BigDecimal.valueOf(6.5));
     }
+
+    @Test
+    @DisplayName("책으로 별점 개수를 조회한다.")
+    void countByBook() {
+        // given
+        Book book = Book.builder()
+                .id(1L)
+                .title("test")
+                .isbn("test")
+                .pages(100)
+                .bookAuthors(List.of(BookAuthor.builder().build()))
+                .build();
+        bookRepository.save(book);
+
+        Member member = Member.builder().username("test").name("test").password("password").gender(Gender.MALE).nickname("test").build();
+        memberRepository.save(member);
+
+        Rating rating1 = Rating.builder()
+                .member(member)
+                .book(book)
+                .rate(7)
+                .build();
+        Rating rating2 = Rating.builder()
+                .member(member)
+                .book(book)
+                .rate(6)
+                .build();
+        ratingRepository.save(rating1);
+        ratingRepository.save(rating2);
+        // when
+        int result = ratingRepository.countByBook(book);
+        // then
+        assertThat(result).isEqualTo(2);
+    }
 }

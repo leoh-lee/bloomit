@@ -39,4 +39,16 @@ class RatingServiceTest {
         assertThat(ratingAvgByBook).isEqualTo(BigDecimal.valueOf(3.3));
     }
 
+    @Test
+    @DisplayName("책으로 별점 개수를 조회한다.")
+    void countByBook() {
+        // given
+        int expected = 3;
+        when(ratingRepository.countByBook(any())).thenReturn(expected);
+        // when
+        int result = ratingService.countByBook(Book.builder().build());
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
+
 }
